@@ -14,7 +14,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public User register(@RequestBody User user) {
-        return userService.registerUser(user.getUsername(), user.getPassword());
+        return userService.registerUser(
+                user.getUsername(),
+                user.getPassword(),
+                user.getEmail(),
+                user.getPhone()
+                );
     }
 
     @PostMapping("/login")
