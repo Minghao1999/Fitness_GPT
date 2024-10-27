@@ -13,6 +13,8 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public User register(@Valid @RequestBody User user) {
@@ -31,5 +33,15 @@ public class AuthController {
         } catch (Exception e) {
             throw new RuntimeException("Login failed: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/user-info")
+    public User getUserInfo(@RequestHeader("Authorization") String token) {
+        String actualToken = token.replace("Bearer ", "");
+
+        String email = jwtUtil.getEmailFromToken(actualToken);
+
+        return userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
     }
 }
