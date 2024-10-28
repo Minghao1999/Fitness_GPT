@@ -45,4 +45,31 @@ public class UserService {
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    public User updateUserInfo(String email, String username, String phone, String gender, String height, String weight, String age) throws Exception {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new Exception("User not found"));
+
+        if (phone != null) {
+            user.setPhone(phone);
+        }
+        if (gender != null) {
+            user.setGender(gender);
+        }
+        if (height != null) {
+            user.setHeight(height);
+        }
+        if (weight != null) {
+            user.setWeight(weight);
+        }
+        if (age != null) {
+            user.setAge(age);
+        }
+        if (username != null) {
+            user.setUsername(username);
+        }
+
+        return userRepository.save(user);
+    }
 }
+
+
