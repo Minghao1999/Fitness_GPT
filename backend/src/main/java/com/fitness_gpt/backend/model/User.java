@@ -40,4 +40,20 @@ public class User {
     @NotBlank(message = "Phone cannot be blank")
     private String phone;
 
+    @Setter
+    @Getter
+    private String gender;
+
+    @Setter
+    @Getter
+    private String height;
+
+    @Setter
+    @Getter
+    private String weight;
+
+    @Setter
+    @Getter
+    private String Age;
+
 }

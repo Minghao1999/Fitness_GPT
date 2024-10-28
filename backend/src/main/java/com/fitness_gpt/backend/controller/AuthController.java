@@ -7,6 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -43,5 +46,24 @@ public class AuthController {
 
         return userService.getUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
+    }
+
+    @PatchMapping("/update-info")
+    public User updateUserInfo(@RequestHeader("Authorization") String token, @RequestBody Map<String, Object> updates) {
+        String actualToken = token.replace("Bearer ", "");
+        String email = jwtUtil.getEmailFromToken(actualToken);
+
+        String gender = updates.get("gender") != null ? updates.get("gender").toString() : null;
+        String age = updates.get("age") != null ? updates.get("age").toString() : null;
+        String phone = updates.get("phone") != null ? updates.get("phone").toString() : null;
+        String username = updates.get("username") != null ? updates.get("username").toString() : null;
+        String height = updates.get("height") != null ? updates.get("height").toString() : null;
+        String weight = updates.get("weight") != null ? updates.get("weight").toString() : null;
+
+        try{
+            return userService.updateUserInfo(email, username, phone, gender, height, weight, age);
+        }catch (Exception e){
+            throw new RuntimeException("Invalid token: " + e.getMessage());
+        }
     }
 }
