@@ -9,6 +9,7 @@ import Login from "./Pages/Login.tsx";
 import {Register} from "./Pages/Register.tsx";
 import App from "./App.tsx";
 import About from "./Pages/About.tsx";
+import Dashboard from "./Pages/Dashboard.tsx";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -25,6 +26,7 @@ root.render(
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/register" element={<Register/>}/>
                         </Route>
+                            <Route path="/dashboard" element={<Dashboard/>}/>
                     </Routes>
                 </BrowserRouter>
             </SnackbarProvider>
