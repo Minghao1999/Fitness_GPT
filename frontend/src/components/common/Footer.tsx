@@ -32,7 +32,7 @@ const Footer = () => {
                                 fontFamily="logoFontFamily"
                                 fontWeight={700}
                             >
-                                Ruby Gym
+                                Fitness GPT
                             </Typography>
                         </Stack>
                     </Button>
