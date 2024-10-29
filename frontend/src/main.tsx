@@ -11,6 +11,7 @@ import App from "./App.tsx";
 import About from "./Pages/About.tsx";
 import Dashboard from "./Pages/Dashboard.tsx";
 import ForgetPassword from './Pages/Forgetpassword.tsx';
+import AccountInfo from './Pages/AccountInfo.tsx';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -26,6 +27,7 @@ root.render(
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/register" element={<Register/>}/>
                             <Route path="/forgetpassword" element={<ForgetPassword/>}/>
+                            <Route path="/accountinfo" element={<AccountInfo/>}/>
                         </Route>
                             <Route path="/dashboard" element={<Dashboard/>}/>
                     </Routes>

@@ -4,12 +4,14 @@ import {
     Button,
     Container,
     IconButton,
-    Modal,
+    Menu,
+    MenuItem,
     Stack,
     styled,
     Typography,
+    Avatar,
 } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, AccountCircle } from '@mui/icons-material';
 import Logo from '../../assets/images/Logo.png';
 
 const ModalNavButton = styled(Button)(({ theme }) => ({
@@ -24,6 +26,7 @@ const ModalNavButton = styled(Button)(({ theme }) => ({
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
     const location = useLocation();
     const activeRoutes = {
         home: location.pathname === '/',
@@ -31,11 +34,19 @@ const Navbar = () => {
         favorites: location.pathname === '/favorites',
     };
 
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <Container sx={{ height: { xs: 70, sm: 80 }, py: { xs: 1 / 2, sm: 1 } }}>
             <Stack
                 direction="row"
-                justifyContent={{ xs: 'space-between', sm: 'flex-start' }}
+                justifyContent={{ xs: 'space-between', sm: 'space-between' }}
                 alignItems="center"
                 spacing={{ xs: 1, sm: 5 }}
             >
@@ -104,6 +115,28 @@ const Navbar = () => {
                         Login
                     </Button>
                 </Stack>
+                <IconButton
+                    onClick={handleMenuOpen}
+                    sx={{ display: { xs: 'block', sm: 'block' }, ml: 'auto' }}
+                    color="inherit"
+                >
+                    <AccountCircle fontSize="large" />
+                </IconButton>
+                <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                    <MenuItem component={Link} to="/accountinfo" onClick={handleMenuClose}>
+    <Avatar sx={{ mr: 2 }} /> Account
+</MenuItem>
+
+                    <MenuItem onClick={handleMenuClose}>My Training Plan</MenuItem>
+                    <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+                    <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                </Menu>
             </Stack>
         </Container>
     );
