@@ -8,6 +8,7 @@ import Home from "./Pages/Home.tsx";
 import Login from "./Pages/Login.tsx";
 import {Register} from "./Pages/Register.tsx";
 import App from "./App.tsx";
+import About from "./Pages/About.tsx";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -20,6 +21,7 @@ root.render(
                     <Routes>
                         <Route path="/" element={<App/>}>
                             <Route index element={<Home/>}/>
+                            <Route path="/about" element={<About/>}/>
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/register" element={<Register/>}/>
                         </Route>
