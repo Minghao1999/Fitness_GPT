@@ -73,3 +73,16 @@
 .register-button:hover {
     background-color: #d32f2f;
 }
+
+.back-login-button {
+    margin-top: 20px;
+    background-color: transparent;
+    color: #ff5349;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .back-login-button:hover {
+    color: #e0453d;
+  }
