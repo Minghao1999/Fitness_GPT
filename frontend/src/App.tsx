@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from "./components/common/Navbar.tsx";
 import Footer from "./components/common/Footer.tsx";
+
 import {Outlet} from "react-router-dom";
 
 const App: React.FC = () => {
@@ -9,6 +10,7 @@ const App: React.FC = () => {
             <Navbar/>
             <Outlet/>
             <Footer/>
+            
         </>
     );
 };
