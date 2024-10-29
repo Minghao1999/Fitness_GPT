@@ -15,6 +15,7 @@ const Login: React.FC = () => {
             setSuccessMessage('Login successful!')
             setErrorMessage('')
             localStorage.setItem('token', token)
+            window.location.href = '/common'
         }catch (error){
             setErrorMessage('Login failed. Please check your credentials.')
             console.log('Login error:', error)
