@@ -1,13 +1,14 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import './Styles/Login.css';
 import { loginUser } from "../services/authServices.tsx";
+import {useNavigate} from "react-router-dom";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [successMessage, setSuccessMessage] = useState<string>('');
-
+    const navigate = useNavigate()
     const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
         try {
@@ -15,7 +16,8 @@ const Login: React.FC = () => {
             setSuccessMessage('Login successful!');
             setErrorMessage('');
             localStorage.setItem('token', token);
-            window.location.href = '/common';
+            console.log('token:',token )
+            navigate('/dashboard')
         } catch (error) {
             setErrorMessage('Login failed. Please check your credentials.');
             console.log('Login error:', error);

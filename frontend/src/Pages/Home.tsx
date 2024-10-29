@@ -1,7 +1,7 @@
 import {Box, Container} from "@mui/material";
-import Hero from "../components/Hero.tsx";
-import Navbar from "../components/common/Navbar.tsx";
-import Footer from "../components/common/Footer.tsx";
+import Hero from "../Components/Hero.tsx";
+import Navbar from "../Components/common/Navbar.tsx";
+import Footer from "../Components/common/Footer.tsx";
 
 const Home = () => {
     return(
