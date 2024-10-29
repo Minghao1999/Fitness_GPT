@@ -77,6 +77,13 @@ const Register: React.FC = () => {
                     </div>
                     <button type="submit" className="register-button">Register now</button>
                 </form>
+                <button
+                    type="button"
+                    className="back-login-button"
+                    onClick={() => (window.location.href = '/login')}
+                >
+                    Back to Login
+                </button>
             </div>
         </div>
     );

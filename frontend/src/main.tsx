@@ -9,6 +9,7 @@ import Login from "./Pages/Login.tsx";
 import {Register} from "./Pages/Register.tsx";
 import App from "./App.tsx";
 import About from "./Pages/About.tsx";
+import ForgetPassword from './Pages/Forgetpassword.tsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -24,6 +25,7 @@ root.render(
                             <Route path="/about" element={<About/>}/>
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/register" element={<Register/>}/>
+                            <Route path="/forgetpassword" element={<ForgetPassword/>}/>
                         </Route>
                     </Routes>
                 </BrowserRouter>
