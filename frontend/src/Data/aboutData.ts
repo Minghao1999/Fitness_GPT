@@ -8,5 +8,5 @@ const aboutData = {
     imagePath: "/path/to/fitness-image.jpg"
   };
   
-  export default aboutData;
+export default aboutData;
   

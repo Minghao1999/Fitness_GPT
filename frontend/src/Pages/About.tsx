@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Container } from '@mui/material';
 import './Styles/About.css';
-import aboutData from '../Data/aboutData';
+import aboutData from '../Data/aboutData.ts';
 import aboutImage from '../assets/images/about-muscleman.png';
 
 const AboutPage: React.FC = () => {
