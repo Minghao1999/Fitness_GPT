@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './/styles/UserInfo.css'
-import {getUserInfo, updateUserInfo} from "../services/authServices.tsx";
+import {getUserInfo, updateUserInfo} from "../Services/authServices.tsx";
 import {useNavigate} from "react-router-dom";
 
 interface User {

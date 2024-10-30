@@ -1,4 +1,5 @@
-import axios from 'axios'
+import {User} from "../Types/User.ts";
+
 const API_BASE_URL: string = 'http://localhost:8080/auth';
 
 const registerUser = async (user: { username: string; password: string; email: string; phone: string; }): Promise<any> => {
@@ -42,15 +43,7 @@ const loginUser = async (email: string, password: string): Promise<string> => {
     throw error;
   }
 };
-interface User {
-  username: string;
-  email: string;
-  phone: string;
-  gender?: string;
-  age?: string;
-  height?: string;
-  weight?: string;
-}
+
 const getUserInfo = async (): Promise<User> => {
   const token = localStorage.getItem('token');
   console.log('Token being sent:', token)

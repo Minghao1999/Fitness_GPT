@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { registerUser } from '../services/authServices.tsx';
+import { registerUser } from '../Services/authServices.tsx';
 import './Styles/Register.css';
 
 const Register: React.FC = () => {

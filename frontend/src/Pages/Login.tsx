@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import './Styles/Login.css';
-import { loginUser } from "../services/authServices.tsx";
+import { loginUser } from "../Services/authServices.tsx";
 import {useNavigate} from "react-router-dom";
 
 const Login: React.FC = () => {
