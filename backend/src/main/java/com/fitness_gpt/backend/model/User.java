@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "users")
 public class User {
     @Id
+    @Getter
     private String id;
 
     @Setter
@@ -55,5 +56,4 @@ public class User {
     @Setter
     @Getter
     private String Age;
-
 }

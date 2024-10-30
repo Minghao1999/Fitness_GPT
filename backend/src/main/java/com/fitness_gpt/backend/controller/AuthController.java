@@ -47,18 +47,19 @@ public class AuthController {
     public User getUserInfo(@RequestHeader("Authorization") String token) {
         String actualToken = token.replace("Bearer ", "");
 
-        String email = jwtUtil.getEmailFromToken(actualToken);
+        String userId = jwtUtil.getUserIdFromToken(actualToken);
 
-        return userService.getUserByEmail(email)
+        return userService.getUserById(userId)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
     }
 
     @PatchMapping("/update-info")
     public User updateUserInfo(@RequestHeader("Authorization") String token, @RequestBody Map<String, Object> updates) {
         String actualToken = token.replace("Bearer ", "");
-        String email = jwtUtil.getEmailFromToken(actualToken);
+        String userId = jwtUtil.getUserIdFromToken(actualToken);
 
         String gender = updates.get("gender") != null ? updates.get("gender").toString() : null;
+        String email = updates.get("email") != null ? updates.get("email").toString() : null;
         String age = updates.get("age") != null ? updates.get("age").toString() : null;
         String phone = updates.get("phone") != null ? updates.get("phone").toString() : null;
         String username = updates.get("username") != null ? updates.get("username").toString() : null;
@@ -66,7 +67,7 @@ public class AuthController {
         String weight = updates.get("weight") != null ? updates.get("weight").toString() : null;
 
         try{
-            return userService.updateUserInfo(email, username, phone, gender, height, weight, age);
+            return userService.updateUserInfo(userId, email, username, phone, gender, height, weight, age);
         }catch (Exception e){
             throw new RuntimeException("Invalid token: " + e.getMessage());
         }

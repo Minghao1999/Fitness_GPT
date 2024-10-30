@@ -36,21 +36,24 @@ public class UserService {
                 .orElseThrow(() -> new Exception("User not found"));
 
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return jwtUtil.generateToken(user.getEmail());
+            return jwtUtil.generateToken(user.getId());
         } else {
             throw new Exception("Invalid credentials");
         }
     }
 
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public Optional<User> getUserById(String userId) {
+        return userRepository.findById(userId);
     }
 
-    public User updateUserInfo(String email, String username, String phone, String gender, String height, String weight, String age) throws Exception {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new Exception("User not found"));
+    public User updateUserInfo(String userId, String email, String username, String phone, String gender, String height, String weight, String age) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception("User not found"));
 
         if (phone != null) {
             user.setPhone(phone);
+        }
+        if (email != null) {
+            user.setEmail(email);
         }
         if (gender != null) {
             user.setGender(gender);
