@@ -16,7 +16,6 @@ const Login: React.FC = () => {
             setSuccessMessage('Login successful!');
             setErrorMessage('');
             localStorage.setItem('token', token);
-            console.log('token:',token )
             navigate('/dashboard')
         } catch (error) {
             setErrorMessage('Login failed. Please check your credentials.');
