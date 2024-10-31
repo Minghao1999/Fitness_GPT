@@ -1,44 +1,20 @@
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/images/Logo.png';
+import '../styles/Footer.css';
 
-const Footer = () => {
+const Footer: React.FC = () => {
     return (
-        <Box
-            sx={{
-                bgcolor: 'cultured.main',
-                py: 3,
-            }}
-        >
-            <Container>
-                <Stack alignItems="center" justifyContent="center" spacing={2}>
-                    <Button component={Link} to="/" color="richBlack">
-                        <Stack
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="center"
-                            gap={2}
-                        >
-                            <Box
-                                component="img"
-                                src={Logo}
-                                alt="app logo"
-                                width={48}
-                                height={48}
-                            />
-                            <Typography
-                                variant="h5"
-                                component="p"
-                                fontFamily="logoFontFamily"
-                                fontWeight={700}
-                            >
-                                Fitness GPT
-                            </Typography>
-                        </Stack>
-                    </Button>
-                </Stack>
-            </Container>
-        </Box>
+        <div className="footer">
+            <div className="footer-container">
+                <Link to="/" className="footer-link">
+                    <div className="footer-content">
+                        <img src={Logo} alt="app logo" className="footer-logo" />
+                        <p className="footer-title">Fitness GPT</p>
+                    </div>
+                </Link>
+            </div>
+        </div>
     );
 };
 

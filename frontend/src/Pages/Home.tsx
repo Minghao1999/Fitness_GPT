@@ -1,16 +1,13 @@
-import {Box, Container} from "@mui/material";
-import Hero from "../Components/Hero.tsx";
-import Navbar from "../Components/common/Navbar.tsx";
-import Footer from "../Components/common/Footer.tsx";
+import React from 'react';
+import Hero from '../Components/Hero';
+import './Styles/Home.css';
 
-const Home = () => {
-    return(
-        <Box sx={{bgcolor: 'black.main'}}>
-            <Container>
-                <Hero />
-            </Container>
-        </Box>
-    )
-}
+const Home: React.FC = () => {
+    return (
+        <div className="home-container">
+            <Hero />
+        </div>
+    );
+};
 
-export default Home
+export default Home;
