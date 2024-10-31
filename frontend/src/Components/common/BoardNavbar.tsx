@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import Logo from '../../assets/images/Logo.png';
-import '../styles/HomeNavbar.css';
+import '../styles/BoardNavbar.css';
 
 const HomeNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +34,12 @@ const HomeNavbar: React.FC = () => {
                 </Link>
                 <div className="nav-links">
                     <NavLink
+                        to="/dashboard"
+                        className={`nav-link ${activeRoutes.favorites ? 'active' : ''}`}
+                    >
+                        Dashboard
+                    </NavLink>
+                    <NavLink
                         to="/user-message"
                         className={`nav-link ${activeRoutes.home ? 'active' : ''}`}
                     >
@@ -51,6 +57,7 @@ const HomeNavbar: React.FC = () => {
                     >
                         Favorite
                     </NavLink>
+
                 </div>
                 <button className="icon-button" onClick={handleMenuOpen}>
                     <span className="icon">☰</span>
