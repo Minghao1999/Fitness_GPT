@@ -13,6 +13,9 @@ public class UserConversationService {
     @Autowired
     private UserConversationRepository userConversationRepository;
 
+    @Autowired
+    private GPTService gptService;
+
     public UserConversation startConversation(String userId) {
         UserConversation userConversation = new UserConversation();
         userConversation.setUserId(userId);
@@ -24,10 +27,22 @@ public class UserConversationService {
         return userConversationRepository.findByUserId(userId);
     }
 
-    public UserConversation addMessageToConversation(String conversationId, UserConversation.Message message) {
+    public UserConversation addMessageToConversation(String conversationId, UserConversation.Message userMessage) {
         UserConversation conversation = userConversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
-        conversation.getMessages().add(message);
+
+        conversation.getMessages().add(userMessage);
+
+        String gptResponseContent = gptService.getGptResponse(userMessage.getContent());
+
+        UserConversation.Message gptMessage = new UserConversation.Message();
+        gptMessage.setSender("bot");
+        gptMessage.setContent(gptResponseContent);
+        gptMessage.setTimestamp(LocalDateTime.now());
+
+        conversation.getMessages().add(gptMessage);
+
         return userConversationRepository.save(conversation);
     }
+
 }
