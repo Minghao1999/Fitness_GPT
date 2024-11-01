@@ -24,7 +24,7 @@ public class ConversationController {
         return userConversationService.startConversation(userId);
     }
 
-    @GetMapping("/get-message/{conversationId}")
+    @GetMapping("/get-message")
     public List<UserConversation> getAllConversations(@RequestHeader("Authorization") String token) {
         String actualToken = token.replace("Bearer ", "");
         String userId = jwtUtil.getUserIdFromToken(actualToken);

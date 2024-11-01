@@ -11,3 +11,8 @@ export interface Message{
     content: string;
     timestamp: Date;
 }
+
+export interface Message {
+    sender: 'user' | 'bot';
+    text: string;
+}
