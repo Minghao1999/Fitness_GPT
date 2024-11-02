@@ -14,6 +14,7 @@ import java.util.List;
 public class UserConversation {
 
     @Id
+    @Getter @Setter
     private String id;
 
     @Setter

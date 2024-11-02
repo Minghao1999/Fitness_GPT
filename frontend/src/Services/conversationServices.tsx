@@ -1,4 +1,4 @@
-import {UserConversation} from "../Types/Conversation.ts";
+import {Message, UserConversation} from "../Types/Conversation.ts";
 
 const API_BASE_URI = 'http://localhost:8080/conversations'
 
@@ -32,5 +32,38 @@ const getAllConversations = async (): Promise<UserConversation[]> => {
     }
 }
 
+const startConversation = async (): Promise<UserConversation> => {
+    const token = getAuthToken()
+    if(!token) throw new Error('No token found')
 
-export {getAllConversations}
+    const response = await fetch(`${API_BASE_URI}/start`,{
+        method: 'POST',
+        headers:{
+            'Authorization': token,
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) throw new Error('Failed to start conversation')
+    return await response.json()
+}
+
+const addMessageToConversation = async (conversationId: string, message: Message): Promise<UserConversation> => {
+    const token = getAuthToken()
+    if(!token) throw new Error('No token found')
+
+    const response = await fetch(`${API_BASE_URI}/add-message/${conversationId}`,{
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+        body: JSON.stringify(message),
+        credentials: 'include',
+    })
+    if(!response.ok) throw new Error('Failed to send message')
+    return await response.json()
+}
+
+
+export {getAllConversations, startConversation, addMessageToConversation}

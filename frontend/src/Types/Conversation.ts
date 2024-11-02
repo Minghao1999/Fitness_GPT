@@ -6,13 +6,8 @@ export interface UserConversation{
     updatedAt: Date;
 }
 
-export interface Message{
-    sender: string;
-    content: string;
-    timestamp: Date;
-}
-
 export interface Message {
     sender: 'user' | 'bot';
-    text: string;
+    content: string;
+    timestamp?: Date;
 }
