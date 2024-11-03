@@ -34,10 +34,10 @@ const Login: React.FC = () => {
                 {successMessage && <p className="success-message">{successMessage}</p>}
                 <form onSubmit={handleLogin} className="login-form">
                     <div className="form-group">
-                        <label>EMAIL OR USERNAME</label>
+                        <label>EMAIL</label>
                         <input
                             type="email"
-                            placeholder="Email or Username"
+                            placeholder="Email"
                             value={email}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                             required

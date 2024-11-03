@@ -9,8 +9,22 @@ const Register: React.FC = () => {
     const [phone, setPhone] = useState<string>('');
     const [message, setMessage] = useState<string>('');
 
+    const validatePassword = (password: string) => {
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        return hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
+    };
+
     const handleRegister = async (e: FormEvent) => {
         e.preventDefault();
+
+        if (!validatePassword(password)) {
+            setMessage('Password must contain uppercase, lowercase, number, and special character.');
+            return;
+        }
+
         try {
             const data = await registerUser({
                 username,
@@ -20,8 +34,16 @@ const Register: React.FC = () => {
             });
             setMessage('Registration successful!');
             console.log('Registration user data:', data);
-        } catch (error) {
-            setMessage('Registration failed. Try again');
+            // Redirect to /login after successful registration
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.message) {
+                setMessage(`Registration failed: ${error.response.data.message}`);
+            } else {
+                setMessage('Registration failed. Try again');
+            }
         }
         console.log('Username:', username, 'Email:', email, 'Phone:', phone, 'Password:', password);
     };
@@ -89,5 +111,4 @@ const Register: React.FC = () => {
     );
 };
 
-
-export {Register};
+export { Register };
