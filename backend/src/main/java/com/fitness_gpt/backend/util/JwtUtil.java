@@ -14,13 +14,13 @@ public class JwtUtil {
 
     private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String generateToken(String userId) {
+    public String generateToken(String userId) {//Generate a JWT containing userId and set the validity period and signature.
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(userId)//Set the body of the JWT(the sub field) to userId, indicating that the token is generated for this user.
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))//Set the token expiration time, here is the current time plus 10 hours.
                 .signWith(SECRET_KEY)
-                .compact();
+                .compact();// Generate the final JWT token.
     }
 
     public Boolean validateToken(String token) {
