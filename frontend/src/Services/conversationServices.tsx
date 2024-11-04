@@ -1,69 +1,59 @@
-import {Message, UserConversation} from "../Types/Conversation.ts";
+import axios from 'axios';
+import { Message, UserConversation } from '../Types/Conversation.ts';
 
-const API_BASE_URI = 'http://localhost:8080/conversations'
+const API_BASE_URI = 'http://localhost:8080/conversations';
 
-const getAuthToken = () : string | null => {
-    const token = localStorage.getItem('token')
-    return token ? `Bearer ${token}` : null
-}
+const getAuthToken = (): string | null => {
+    const token = localStorage.getItem('token');
+    return token ? `Bearer ${token}` : null;
+};
+
+const api = axios.create({
+    baseURL: API_BASE_URI,
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+api.interceptors.request.use((config) => {
+    const token = getAuthToken();
+    if (token) {
+        config.headers.Authorization = token;
+    } else {
+        throw new Error('No token found');
+    }
+    return config;
+});
 
 const getAllConversations = async (): Promise<UserConversation[]> => {
-    const token = getAuthToken()
-    if(!token){
-        throw new Error('No token found')
+    try {
+        const response = await api.get<UserConversation[]>('/get-message');
+        return response.data;
+    } catch (error) {
+        console.log('Error fetching conversations:', error);
+        throw error;
     }
-    //console.log('Token in getAllConversations:', token);
-
-    try{
-        const response = await fetch(`${API_BASE_URI}/get-message`,{
-            method: 'GET',
-            headers:{
-                'Authorization': token,
-            },
-            credentials: 'include',
-        })
-        if (!response.ok){
-            throw new Error('Failed to fetch conversations')
-        }
-        return await response.json()
-    }catch (error){
-        console.log('Error fetching conversations:', error)
-        throw error
-    }
-}
+};
 
 const startConversation = async (): Promise<UserConversation> => {
-    const token = getAuthToken()
-    if(!token) throw new Error('No token found')
-
-    const response = await fetch(`${API_BASE_URI}/start`,{
-        method: 'POST',
-        headers:{
-            'Authorization': token,
-        },
-        credentials: 'include',
-    })
-
-    if (!response.ok) throw new Error('Failed to start conversation')
-    return await response.json()
-}
+    try {
+        const response = await api.post<UserConversation>('/start');
+        return response.data;
+    } catch (error) {
+        console.log('Error starting conversation:', error);
+        throw error;
+    }
+};
 
 const addMessageToConversation = async (conversationId: string, message: Message): Promise<UserConversation> => {
-    const token = getAuthToken()
-    if(!token) throw new Error('No token found')
+    try {
+        const response = await api.post<UserConversation>(`/add-message/${conversationId}`, message);
+        return response.data;
+    } catch (error) {
+        console.log('Error adding message:', error);
+        throw error;
+    }
+};
 
-    const response = await fetch(`${API_BASE_URI}/add-message/${conversationId}`,{
-        method: 'POST',
-        headers:{
-            'Content-Type': 'application/json',
-            'Authorization': token,
-        },
-        body: JSON.stringify(message),
-        credentials: 'include',
-    })
-    if(!response.ok) throw new Error('Failed to send message')
-    return await response.json()
-}
-
-
-export {getAllConversations, startConversation, addMessageToConversation}
+export { getAllConversations, startConversation, addMessageToConversation };
