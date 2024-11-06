@@ -5,13 +5,13 @@ const API_BASE_URL = 'http://localhost:8080/auth';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true,
+  withCredentials: true,// Ensures credentials (such as cookies) are sent with requests.
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json',// Indicating the server expects JSON-formatted data.
   },
 });
 
-const registerUser = async (user: { username: string; password: string; email: string; phone: string; }): Promise<any> => {
+const registerUser = async (user: { username: string; password: string; email: string; phone: string; }): Promise<unknown> => {
   try {
     const response = await api.post('/register', user);
     return response.data;

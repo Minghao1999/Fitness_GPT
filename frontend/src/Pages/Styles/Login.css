@@ -1,15 +1,13 @@
-
-
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #000;
+    background-color: #121212;
 }
 
 .login-box {
-    background-color: #111;
+    background-color: #1e1e1e;
     padding: 2rem;
     width: 100%;
     max-width: 400px;
@@ -22,6 +20,7 @@
     font-size: 1.8rem;
     font-weight: bold;
     color: #f44336;
+    margin-bottom: 0.5rem;
 }
 
 .login-header h2 {
@@ -60,6 +59,39 @@
     border-radius: 4px;
     background-color: #222;
     color: #fff;
+    font-size: 1rem;
+}
+
+.password-container {
+    position: relative;
+}
+
+.password-container input[type="password"],
+.password-container input[type="text"] {
+    width: 100%;
+    padding: 0.8rem;
+    padding-right: 3rem; /* Space for the toggle button */
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #222;
+    color: #fff;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: #f44336;
 }
 
 .checkbox-group {
@@ -71,8 +103,6 @@
 .checkbox-group input {
     margin-right: 0.5rem;
 }
-
-
 
 .login-button {
     width: 100%;
