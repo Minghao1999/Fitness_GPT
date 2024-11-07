@@ -3,14 +3,8 @@ import './Styles/Dashboard.css';
 import './Styles/UserMessage.css';
 import BoardNavbar from '../Components/common/BoardNavbar.tsx';
 import Footer from '../Components/common/Footer.tsx';
-import { getAllConversations } from "../Services/conversationServices.tsx";
-import { UserConversation } from "../Types/Conversation.ts";
-
-interface Message {
-    sender: 'user' | 'bot';
-    content: string;
-    timestamp?: string
-}
+import { addMessageToConversation, getAllConversations, startConversation } from "../Services/conversationServices.tsx";
+import { Message, UserConversation } from "../Types/Conversation.ts";
 
 const UserMessage: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);  // Messages for the selected conversation
@@ -21,10 +15,8 @@ const UserMessage: React.FC = () => {
     useEffect(() => {
         const initializeConversation = async () => {
             try {
-                // Fetch conversations from backend and set them in state
                 const history = await getAllConversations() as UserConversation[];
                 setConversationHistory(history);
-
                 console.log('Fetched Conversation History:', history);
             } catch (error) {
                 console.error('Error fetching conversation history:', error);
@@ -35,27 +27,68 @@ const UserMessage: React.FC = () => {
 
     // Handle selecting a conversation from the sidebar
     const handleSelectConversation = (index: number) => {
+        const conversation = conversationHistory[index];
+        if (!conversation) {
+            console.error('Selected conversation does not exist');
+            return;
+        }
         setSelectedConversationIndex(index);
-
-        // Update messages with the messages from the selected conversation
-        setMessages(conversationHistory[index].messages as Message[]);
-
-        console.log('Selected Conversation Messages:', conversationHistory[index].messages); // Debugging
+        setMessages(conversation.messages as Message[]);
+        console.log('Selected Conversation Messages:', conversationHistory[index].messages);
     };
 
     // Handle sending a message
-    const handleSendMessage = () => {
-        if (input.trim() === '' || selectedConversationIndex === null) return;
+    const handleSendMessage = async () => {
+        if (input.trim() === '') return;
 
+        let conversationId;
+        if (selectedConversationIndex === null) {
+            // Start a new conversation if none is selected
+            try {
+                const newConversation = await startConversation();
+                if (!newConversation.id) {
+                    console.error('No conversation ID returned from backend');
+                    return;
+                }
+                setConversationHistory([...conversationHistory, newConversation]);
+                setSelectedConversationIndex(conversationHistory.length);
+                setMessages(newConversation.messages as Message[]);
+                conversationId = newConversation.id;
+                console.log('new conversation id', newConversation.id)
+                console.log('Started a new conversation:', newConversation);
+            } catch (error) {
+                console.error('Error starting a new conversation:', error);
+                return;
+            }
+        } else {
+            // Get the ID of the selected conversation
+            conversationId = conversationHistory[selectedConversationIndex]?.id;
+            console.log('history conversation',conversationHistory[selectedConversationIndex].id )
+            console.log('conversation ID', conversationId)
+            if (!conversationId) {
+                console.error('Invalid conversation ID');
+                return;
+            }
+        }
+
+        // Create the user message
         const userMessage: Message = { sender: 'user', content: input };
         setMessages([...messages, userMessage]);
         setInput('');
 
-        // Simulate a bot response after a short delay
-        setTimeout(() => {
-            const botMessage: Message = { sender: 'bot', content: 'This is a response from Fitness GPT.' };
-            setMessages(prevMessages => [...prevMessages, botMessage]);
-        }, 1000);
+        try {
+            const updatedConversation = await addMessageToConversation(conversationId, userMessage);
+            const updatedHistory = [...conversationHistory];
+            if (selectedConversationIndex !== null) {
+                updatedHistory[selectedConversationIndex] = updatedConversation;
+            } else {
+                updatedHistory.push(updatedConversation);
+            }
+            setConversationHistory(updatedHistory);
+            setMessages(updatedConversation.messages);
+        } catch (error) {
+            console.log('Error adding message to conversation:', error);
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -74,7 +107,7 @@ const UserMessage: React.FC = () => {
                     <ul className="chat-history">
                         {conversationHistory.map((conversation, index) => (
                             <li
-                                key={conversation.id}
+                                key={`${index} - ${conversation.id}`}
                                 className={`conversation-item ${selectedConversationIndex === index ? 'selected' : ''}`}
                                 onClick={() => handleSelectConversation(index)}
                             >

@@ -9,6 +9,8 @@ const Login: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [successMessage, setSuccessMessage] = useState<string>('');
     const navigate = useNavigate()
+    const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+
     const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
         try {
@@ -22,6 +24,10 @@ const Login: React.FC = () => {
             console.log('Login error:', error);
         }
     };
+
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    }
 
     return (
         <div className="login-container">
@@ -40,18 +46,28 @@ const Login: React.FC = () => {
                             placeholder="Email"
                             value={email}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                            autoComplete="email"
                             required
                         />
                     </div>
                     <div className="form-group">
                         <label>PASSWORD</label>
+                        <div className="password-container">
                         <input
-                            type="password"
+                            type={passwordVisible ? 'text' : "password"}
                             placeholder="Password"
                             value={password}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                             required
                         />
+                        <button
+                            type='button'
+                            className="toggle-password"
+                            onClick={togglePasswordVisibility}
+                        >
+                            {passwordVisible ? 'Hide' : 'Show'}
+                        </button>
+                    </div>
                     </div>
                     <div className="form-group checkbox-group">
                         <input type="checkbox" /> Keep me logged in

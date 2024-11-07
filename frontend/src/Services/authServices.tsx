@@ -1,92 +1,72 @@
-import {User} from "../Types/User.ts";
+import axios from 'axios';
+import { User } from '../Types/User.ts';
 
-const API_BASE_URL: string = 'http://localhost:8080/auth';
+const API_BASE_URL = 'http://localhost:8080/auth';
 
-const registerUser = async (user: { username: string; password: string; email: string; phone: string; }): Promise<any> => {
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,// Ensures credentials (such as cookies) are sent with requests.
+  headers: {
+    'Content-Type': 'application/json',// Indicating the server expects JSON-formatted data.
+  },
+});
+
+const registerUser = async (user: { username: string; password: string; email: string; phone: string; }): Promise<unknown> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(user),
-    });
-    if (!response.ok) {
-      throw new Error('Failed to register user');
-    }
-    return await response.json();
+    const response = await api.post('/register', user);
+    return response.data;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error registering user:', error);
     throw error;
   }
 };
 
 const loginUser = async (email: string, password: string): Promise<string> => {
   try {
-    const response: Response = await fetch(`${API_BASE_URL}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({ email, password }),
-    });
-    if (!response.ok) {
-      throw new Error('Failed to log in user');
-    }
-    const token =await response.text()
+    const response = await api.post('/login', { email, password });
+    const token = response.data;
     localStorage.setItem('token', token);
     return token;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error logging in user:', error);
     throw error;
   }
 };
-
 const getUserInfo = async (): Promise<User> => {
   const token = localStorage.getItem('token');
-  console.log('Token being sent:', token)
+  console.log('Token being sent:', token);
   if (!token) {
     throw new Error('No token found');
   }
   try {
-    const response: Response = await fetch(`${API_BASE_URL}/user-info`, {
-      method: 'GET',
+    const response = await api.get('/user-info', {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
-      credentials: 'include',
     });
-    if (!response.ok) {
-      throw new Error('Failed to get user info');
-    }
-    return await response.json();
+    return response.data;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error fetching user info:', error);
     throw error;
   }
 };
 
 const updateUserInfo = async (updates: Partial<User>): Promise<User> => {
-  const token = localStorage.getItem('token')
-  if (!token){
-    throw new Error('No token found')
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No token found');
   }
-
-  const response = await fetch(`${API_BASE_URL}/update-info`,{
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(updates)
-  })
-  if (!response.ok){
-    throw new Error('Failed to update user info')
+  try {
+    const response = await api.patch('/update-info', updates, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user info:', error);
+    throw error;
   }
+};
 
-  return await response.json()
-}
-
-export {registerUser, loginUser, getUserInfo, updateUserInfo}
+export { registerUser, loginUser, getUserInfo, updateUserInfo };
