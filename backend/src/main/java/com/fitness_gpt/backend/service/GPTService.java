@@ -29,9 +29,16 @@ public class GPTService {
         headers.set("Authorization", "Bearer " + apiKey);// Set authorization head, use Bearer token validation.
         headers.set("Content-Type", "application/json");//Specify the request body format as "application/json"
 
+        String systemContext = """
+        {
+            "role": "system",
+            "content": "You are an assistant whose knowledge is limited to the general knowledge about fitness."
+        }
+    """;
+
         String requestBody = String.format(
-                "{\"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}], \"max_tokens\": 50}",
-                question);//Constructing the request body format. max_tokens set a limit on the length of generated replies.
+                "{\"model\": \"gpt-3.5-turbo\", \"messages\": [%s, {\"role\": \"user\", \"content\": \"%s\"}]}",
+                systemContext, question);//Constructing the request body format. max_tokens set a limit on the length of generated replies.
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);//Encapsulate the request body and request header into HttpEntity.
 
         ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);
