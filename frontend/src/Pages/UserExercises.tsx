@@ -7,7 +7,7 @@ import "./Styles/UserExercises.css"
 
 const UserExercisesPage: React.FC = () => {
     const [exercises, setExercises] = useState([])
-
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const getExercises = async () => {
@@ -17,14 +17,34 @@ const UserExercisesPage: React.FC = () => {
         getExercises()
     },[])
 
+    const filteredExercises = exercises.filter((exercise: any)=>
+        exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLElement>) => {
+        setSearchQuery(e.target.value)
+    }
+
     return (
         <div>
             <BoardNavbar/>
-            <div>
-                {exercises
-                    .map((exercise: any) => (
+            <div className="search-container">
+                <input
+                    type="text"
+                    placeholder="Search Exercise by Name"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="search-input"
+                />
+            </div>
+            <div className="header">
+                {filteredExercises.length > 0 ? (
+                    filteredExercises.map((exercise: any) => (
                         <ExerciseCard key={exercise.id} exercise={exercise} />
                     ))
+                ):(
+                    <p>No exercises found</p>
+                )
                 }
             </div>
             <Footer/>

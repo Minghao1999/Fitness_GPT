@@ -15,6 +15,7 @@ import AccountInfo from './Pages/AccountInfo.tsx';
 import UserMessage from "./Pages/UserMessage.tsx";
 import UserExercises from "./Pages/UserExercises.tsx";
 import UserFavorites from "./Pages/UserFavorites.tsx";
+import UserExerciseDetail from "./Pages/UserExerciseDetail.tsx";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -36,6 +37,7 @@ root.render(
                             <Route path="/user-message" element={<UserMessage/>}/>
                             <Route path="/user-exercise" element={<UserExercises/>}/>
                             <Route path="/user-favorites" element={<UserFavorites/>}/>
+                            <Route path="/exercise-detail/:id" element={<UserExerciseDetail/>}/>
                     </Routes>
                 </BrowserRouter>
             </SnackbarProvider>
