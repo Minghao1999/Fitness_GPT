@@ -7,17 +7,18 @@ import { addMessageToConversation, getAllConversations, startConversation } from
 import { Message, UserConversation } from "../Types/Conversation.ts";
 
 const UserMessage: React.FC = () => {
-    const [messages, setMessages] = useState<Message[]>([]);  // Messages for the selected conversation
+    const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
-    const [conversationHistory, setConversationHistory] = useState<UserConversation[]>([]);  // Store each conversation and its messages
+    const [conversationHistory, setConversationHistory] = useState<UserConversation[]>([]);
     const [selectedConversationIndex, setSelectedConversationIndex] = useState<number | null>(null);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     useEffect(() => {
         const initializeConversation = async () => {
             try {
                 const history = await getAllConversations() as UserConversation[];
                 setConversationHistory(history);
-                console.log('Fetched Conversation History:', history);
+                console.log('Fetched conversation history:', history);
             } catch (error) {
                 console.error('Error fetching conversation history:', error);
             }
@@ -25,7 +26,6 @@ const UserMessage: React.FC = () => {
         initializeConversation();
     }, []);
 
-    // Handle selecting a conversation from the sidebar
     const handleSelectConversation = (index: number) => {
         const conversation = conversationHistory[index];
         if (!conversation) {
@@ -34,16 +34,14 @@ const UserMessage: React.FC = () => {
         }
         setSelectedConversationIndex(index);
         setMessages(conversation.messages as Message[]);
-        console.log('Selected Conversation Messages:', conversationHistory[index].messages);
+        console.log('Selected conversation messages:', conversationHistory[index].messages);
     };
 
-    // Handle sending a message
     const handleSendMessage = async () => {
         if (input.trim() === '') return;
 
         let conversationId;
         if (selectedConversationIndex === null) {
-            // Start a new conversation if none is selected
             try {
                 const newConversation = await startConversation();
                 if (!newConversation.id) {
@@ -54,24 +52,22 @@ const UserMessage: React.FC = () => {
                 setSelectedConversationIndex(conversationHistory.length);
                 setMessages(newConversation.messages as Message[]);
                 conversationId = newConversation.id;
-                console.log('new conversation id', newConversation.id)
-                console.log('Started a new conversation:', newConversation);
+                console.log('New conversation ID:', newConversation.id);
+                console.log('Started new conversation:', newConversation);
             } catch (error) {
-                console.error('Error starting a new conversation:', error);
+                console.error('Error starting new conversation:', error);
                 return;
             }
         } else {
-            // Get the ID of the selected conversation
             conversationId = conversationHistory[selectedConversationIndex]?.id;
-            console.log('history conversation',conversationHistory[selectedConversationIndex].id )
-            console.log('conversation ID', conversationId)
+            console.log('History conversation ID:', conversationHistory[selectedConversationIndex].id);
+            console.log('Conversation ID:', conversationId);
             if (!conversationId) {
                 console.error('Invalid conversation ID');
                 return;
             }
         }
 
-        // Create the user message
         const userMessage: Message = { sender: 'user', content: input };
         setMessages([...messages, userMessage]);
         setInput('');
@@ -97,24 +93,42 @@ const UserMessage: React.FC = () => {
         }
     };
 
+    // Toggle the collapse state of the sidebar
+    const toggleSidebar = () => {
+        setSidebarCollapsed(!sidebarCollapsed);
+    };
+
     return (
         <div className="dashboard-container">
             <BoardNavbar />
             <div className="main-content">
+                {/* Expand Button for Collapsed Sidebar */}
+                {sidebarCollapsed && (
+                    <button className="expand-button" onClick={toggleSidebar}>
+                        ➕
+                    </button>
+                )}
                 {/* Left Sidebar */}
-                <div className="sidebar">
-                    <h3>History</h3>
-                    <ul className="chat-history">
-                        {conversationHistory.map((conversation, index) => (
-                            <li
-                                key={`${index} - ${conversation.id}`}
-                                className={`conversation-item ${selectedConversationIndex === index ? 'selected' : ''}`}
-                                onClick={() => handleSelectConversation(index)}
-                            >
-                                <h4>Conversation {index + 1}</h4>
-                            </li>
-                        ))}
-                    </ul>
+                <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+                    <div className="sidebar-header">
+                        <button className="toggle-button" onClick={toggleSidebar}>
+                            {sidebarCollapsed ? '➕' : '➖'}
+                        </button>
+                        <h3>History</h3>
+                    </div>
+                    {!sidebarCollapsed && (
+                        <ul className="chat-history">
+                            {conversationHistory.map((conversation, index) => (
+                                <li
+                                    key={`${index} - ${conversation.id}`}
+                                    className={`conversation-item ${selectedConversationIndex === index ? 'selected' : ''}`}
+                                    onClick={() => handleSelectConversation(index)}
+                                >
+                                    <h4>Conversation {index + 1}</h4>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
 
                 {/* Right Chat Container */}

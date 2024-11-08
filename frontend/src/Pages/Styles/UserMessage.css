@@ -17,10 +17,42 @@
     background-color: #f1f1f1;
     border-right: 1px solid #ddd;
     overflow-y: auto;
+    transition: width 0.3s ease;
+    position: relative; /* 确保侧边栏中的元素定位正常 */
+}
+
+.sidebar.collapsed {
+    width: 50px; /* 调整这个值来设置折叠后的宽度 */
+    padding: 10px; /* 侧边栏折叠时减少内边距 */
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    background-color: #f5f5f5;
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: absolute; /* 将按钮绝对定位 */
+    top: 10px;
+    left: 10px; /* 确保按钮即使在侧边栏收缩时也可见 */
+    z-index: 2; /* 确保按钮在所有内容之上 */
 }
 
 .sidebar h3 {
     margin-top: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed h3 {
+    opacity: 0; /* 折叠时隐藏标题 */
+    visibility: hidden;
 }
 
 .chat-container {
@@ -125,6 +157,7 @@
 .chat-option-button:hover {
     background-color: #d1d1d1;
 }
+
 .conversation-item {
     padding: 10px;
     cursor: pointer;
