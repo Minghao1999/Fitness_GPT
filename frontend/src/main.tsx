@@ -35,8 +35,6 @@ root.render(
                             <Route path="/forgetpassword" element={<ForgetPassword />} />
                             <Route path="/accountinfo" element={<AccountInfo />} />
                         </Route>
-
-                        {/* 受保护页面 */}
                         <Route
                             path="/dashboard"
                             element={
