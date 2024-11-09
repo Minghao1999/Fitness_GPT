@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../assets/images/Logo.png';
 import '../styles/BoardNavbar.css';
 
@@ -7,6 +7,7 @@ const HomeNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const activeRoutes = {
         home: location.pathname === '/',
@@ -22,6 +23,26 @@ const HomeNavbar: React.FC = () => {
         setAnchorEl(null);
     };
 
+    const handleLogout = () => {
+        // 删除令牌
+        localStorage.removeItem('token'); // 假设令牌存储在 localStorage
+        sessionStorage.removeItem('token'); // 如果用 sessionStorage 也可以一并移除
+
+        // 重定向到初始页面
+        navigate('/');
+
+        // 关闭菜单
+        handleMenuClose();
+    };
+
+    // 新增的函数：处理 Account 的跳转
+    const handleAccountClick = () => {
+        // 重定向到 /accountinfo 页面
+        navigate('/accountinfo');
+        
+        // 关闭菜单
+        handleMenuClose();
+    };
 
     return (
         <div className="navbar-container">
@@ -57,19 +78,18 @@ const HomeNavbar: React.FC = () => {
                     >
                         Favorite
                     </NavLink>
-
                 </div>
                 <button className="icon-button" onClick={handleMenuOpen}>
                     <span className="icon">☰</span>
                 </button>
                 {anchorEl && (
                     <div className="menu" style={{ top: anchorEl.getBoundingClientRect().bottom }}>
-                        <div className="menu-item" onClick={handleMenuClose}>
+                        <div className="menu-item" onClick={handleAccountClick}>
                             <span className="avatar" /> Account
                         </div>
                         <div className="menu-item" onClick={handleMenuClose}>My Training Plan</div>
                         <div className="menu-item" onClick={handleMenuClose}>Settings</div>
-                        <div className="menu-item" onClick={handleMenuClose}>Logout</div>
+                        <div className="menu-item" onClick={handleLogout}>Logout</div>
                     </div>
                 )}
             </div>

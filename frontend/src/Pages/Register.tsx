@@ -28,8 +28,16 @@ const Register: React.FC = () => {
             });
             setMessage('Registration successful!');
             console.log('Registration user data:', data);
-        } catch (error) {
-            setMessage('Registration failed. Try again');
+            // Redirect to /login after successful registration
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.message) {
+                setMessage(`Registration failed: ${error.response.data.message}`);
+            } else {
+                setMessage('Registration failed. Try again');
+            }
         }
         console.log('Username:', username, 'Email:', email, 'Phone:', phone, 'Password:', password);
     };
@@ -136,5 +144,4 @@ const Register: React.FC = () => {
     );
 };
 
-
-export {Register};
+export { Register };

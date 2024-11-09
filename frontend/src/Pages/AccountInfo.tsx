@@ -1,39 +1,58 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Styles/AccountInfo.css';
+import { getUserInfo, updateUserInfo } from '../Services/authServices';
+import { User } from '../Types/User';
 
 const AccountInfo: React.FC = () => {
-    const [name, setName] = useState<string>('John Doe');
-    const [username, setUsername] = useState<string>('john_doe');
-    const [email, setEmail] = useState<string>('john.doe@example.com');
-    const [phone, setPhone] = useState<string>('123-456-7890');
-    const [birthday, setBirthday] = useState<string>('1990-01-01');
-    const [password, setPassword] = useState<string>('********');
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const userInfo = await getUserInfo();
+                setUser(userInfo);
+                setLoading(false);
+            } catch (err) {
+                console.error('Error fetching user info:', err);
+                setError('Failed to load user information');
+                setLoading(false);
+            }
+        };
+        fetchUserInfo();
+    }, []);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        switch (name) {
-            case 'name':
-                setName(value);
-                break;
-            case 'username':
-                setUsername(value);
-                break;
-            case 'email':
-                setEmail(value);
-                break;
-            case 'phone':
-                setPhone(value);
-                break;
-            case 'birthday':
-                setBirthday(value);
-                break;
-            case 'password':
-                setPassword(value);
-                break;
-            default:
-                break;
+        if (user) {
+            setUser({ ...user, [name]: value });
         }
     };
+
+    const handleSaveChanges = async () => {
+        if (user) {
+            try {
+                setLoading(true);
+                const updatedUser = await updateUserInfo(user);
+                setUser(updatedUser);
+                setLoading(false);
+                alert('User information updated successfully');
+            } catch (err) {
+                console.error('Error updating user info:', err);
+                setError('Failed to update user information');
+                setLoading(false);
+            }
+        }
+    };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div className="error-message">{error}</div>;
+    }
 
     return (
         <div className="account-info-container">
@@ -42,7 +61,7 @@ const AccountInfo: React.FC = () => {
                     <h1>Fitness GPT</h1>
                     <h2>Account Information</h2>
                 </div>
-                <form className="account-info-form">
+                <form className="account-info-form" onSubmit={(e) => e.preventDefault()}>
                     <div className="form-group">
                         <label>PROFILE PICTURE</label>
                         <div className="profile-picture">
@@ -54,7 +73,7 @@ const AccountInfo: React.FC = () => {
                         <input
                             type="text"
                             name="name"
-                            value={name}
+                            value={user?.name || ''}
                             onChange={handleInputChange}
                             className="form-input"
                         />
@@ -64,7 +83,7 @@ const AccountInfo: React.FC = () => {
                         <input
                             type="text"
                             name="username"
-                            value={username}
+                            value={user?.username || ''}
                             onChange={handleInputChange}
                             className="form-input"
                         />
@@ -74,7 +93,7 @@ const AccountInfo: React.FC = () => {
                         <input
                             type="email"
                             name="email"
-                            value={email}
+                            value={user?.email || ''}
                             onChange={handleInputChange}
                             className="form-input"
                         />
@@ -84,7 +103,7 @@ const AccountInfo: React.FC = () => {
                         <input
                             type="tel"
                             name="phone"
-                            value={phone}
+                            value={user?.phone || ''}
                             onChange={handleInputChange}
                             className="form-input"
                         />
@@ -94,7 +113,7 @@ const AccountInfo: React.FC = () => {
                         <input
                             type="date"
                             name="birthday"
-                            value={birthday}
+                            value={user?.birthday || ''}
                             onChange={handleInputChange}
                             className="form-input"
                         />
@@ -104,11 +123,14 @@ const AccountInfo: React.FC = () => {
                         <input
                             type="password"
                             name="password"
-                            value={password}
+                            value={user?.password || ''}
                             onChange={handleInputChange}
                             className="form-input"
                         />
                     </div>
+                    <button type="button" onClick={handleSaveChanges} className="save-button">
+                        Save Changes
+                    </button>
                 </form>
             </div>
         </div>
