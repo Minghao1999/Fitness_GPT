@@ -8,6 +8,8 @@ import "./Styles/UserExercises.css"
 const UserExercisesPage: React.FC = () => {
     const [exercises, setExercises] = useState([])
     const [searchQuery, setSearchQuery] = useState("");
+    const [filterCategory, setFilterCategory] = useState("");
+    const [filterValue, setFilterVale] = useState("");
 
     useEffect(() => {
         const getExercises = async () => {
@@ -17,12 +19,33 @@ const UserExercisesPage: React.FC = () => {
         getExercises()
     },[])
 
-    const filteredExercises = exercises.filter((exercise: any)=>
-        exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLElement>) => {
         setSearchQuery(e.target.value)
+    }
+
+    const handleFilterCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+            setFilterCategory(e.target.value)
+            setFilterVale("")
+    }
+
+    const handleFilterValueChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterVale(e.target.value)
+    }
+
+    const filteredExercises = exercises.filter((exercise:any)=>{
+        const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesFilter =
+            filterCategory && filterValue
+                ? exercise[filterCategory]?.toLowerCase() === filterValue.toLowerCase()
+                : true
+        return matchesSearch && matchesFilter
+    })
+
+    const filterOptions : {[key: string]: string[]} ={
+        target: ["lats", "upper back", "traps", "spine"],
+        bodyPart: ["back", "Lower Body", "Core"],
+        equipment: ["Dumbbell", "Barbell", "Machine"],
     }
 
     return (
@@ -36,6 +59,22 @@ const UserExercisesPage: React.FC = () => {
                     onChange={handleSearchChange}
                     className="search-input"
                 />
+                <select onChange={handleFilterCategoryChange} value={filterCategory} className="filter-category">
+                    <option value="">Filter By</option>
+                    <option value="target">Target</option>
+                    <option value="bodyPart">Body Part</option>
+                    <option value="equipment">Equipment</option>
+                </select>
+                {filterCategory && (
+                    <select onChange={handleFilterValueChange} value={filterValue} className="filter-value">
+                        <option value="">Select {filterCategory}</option>
+                        {filterOptions[filterCategory].map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+                )}
             </div>
             <div className="header">
                 {filteredExercises.length > 0 ? (

@@ -1,11 +1,14 @@
 .search-container {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 10px;
     margin: 20px 0;
 }
 
-.search-input {
-    width: 300px;
+.search-input,
+.filter-category,
+.filter-value {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -13,7 +16,18 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.search-input:focus {
+.search-input {
+    width: 300px;
+}
+
+.search-input:focus,
+.filter-category:focus,
+.filter-value:focus {
     outline: none;
     border-color: #007bff;
+}
+
+.filter-category,
+.filter-value {
+    width: 150px;
 }

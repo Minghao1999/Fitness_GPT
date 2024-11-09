@@ -6,7 +6,7 @@ const fetchExercises = async () => {
     const options = {
         method: 'GET',
         url: 'https://exercisedb.p.rapidapi.com/exercises/bodyPart/back',
-        params: {limit: '440', offset: '10'},
+        params: {limit: '1340', offset: '0'},
         headers: {
             'x-rapidapi-key': VITE_API_KEY,
             'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
