@@ -1,11 +1,14 @@
+/* Center and space out search container items */
 .search-container {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
     margin: 20px 0;
+    flex-wrap: wrap; /* For better responsiveness */
 }
 
+/* Styling for search input and filters */
 .search-input,
 .filter-category,
 .filter-value {
@@ -14,20 +17,90 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .search-input {
     width: 300px;
 }
 
+/* Focus styles for interactive elements */
 .search-input:focus,
 .filter-category:focus,
 .filter-value:focus {
     outline: none;
     border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
+/* Width for filters */
 .filter-category,
 .filter-value {
     width: 150px;
 }
+
+/* Hover effect for all interactive inputs */
+.search-input:hover,
+.filter-category:hover,
+.filter-value:hover {
+    border-color: #007bff;
+}
+
+/* Pagination buttons */
+.page-button {
+    padding: 8px 12px;
+    margin: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover effect for pagination buttons */
+.page-button:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Active page button */
+.page-button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+
+/* Card container for three cards per row */
+.card-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to the next row */
+    gap: 20px; /* Space between cards */
+    justify-content: center; /* Centers the cards */
+}
+
+/* Each card takes up one-third of the row */
+.card-container > .card {
+    flex: 1 1 30%; /* 30% width for three cards per row */
+    max-width: 300px; /* Optional: limit the max width of each card */
+    box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .search-input {
+        width: 100%;
+    }
+    .filter-category,
+    .filter-value {
+        width: 100%;
+    }
+
+    .card-container {
+        grid-template-columns: 1fr; /* One column */
+    }
+}
+
+

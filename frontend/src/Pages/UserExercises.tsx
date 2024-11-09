@@ -10,6 +10,8 @@ const UserExercisesPage: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [filterCategory, setFilterCategory] = useState("");
     const [filterValue, setFilterVale] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 12
 
     useEffect(() => {
         const getExercises = async () => {
@@ -17,23 +19,29 @@ const UserExercisesPage: React.FC = () => {
             setExercises(data)
         }
         getExercises()
-    },[])
+    }, [])
 
+    const handlePageClick = (pageNumber: number) => {
+        setCurrentPage(pageNumber)
+    }
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLElement>) => {
         setSearchQuery(e.target.value)
+        setCurrentPage(1)
     }
 
     const handleFilterCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-            setFilterCategory(e.target.value)
-            setFilterVale("")
+        setFilterCategory(e.target.value)
+        setFilterVale("")
+        setCurrentPage(1)
     }
 
     const handleFilterValueChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setFilterVale(e.target.value)
+        setCurrentPage(1)
     }
 
-    const filteredExercises = exercises.filter((exercise:any)=>{
+    const filteredExercises = exercises.filter((exercise: any) => {
         const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
         const matchesFilter =
             filterCategory && filterValue
@@ -42,7 +50,13 @@ const UserExercisesPage: React.FC = () => {
         return matchesSearch && matchesFilter
     })
 
-    const filterOptions : {[key: string]: string[]} ={
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredExercises.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredExercises.length / itemsPerPage);
+
+
+    const filterOptions: { [key: string]: string[] } = {
         target: ["lats", "upper back", "traps", "spine"],
         bodyPart: ["back", "Lower Body", "Core"],
         equipment: ["Dumbbell", "Barbell", "Machine"],
@@ -76,15 +90,26 @@ const UserExercisesPage: React.FC = () => {
                     </select>
                 )}
             </div>
-            <div className="header">
-                {filteredExercises.length > 0 ? (
-                    filteredExercises.map((exercise: any) => (
-                        <ExerciseCard key={exercise.id} exercise={exercise} />
+            <div className="card-container">
+                {currentItems.length > 0 ? (
+                    currentItems.map((exercise: any) => (
+                        <ExerciseCard key={exercise.id} exercise={exercise}/>
                     ))
-                ):(
+                ) : (
                     <p>No exercises found</p>
                 )
                 }
+            </div>
+            <div className="pagination">
+                {Array.from({length: totalPages}, (_, index) => index + 1).map((pageNumber) => (
+                    <button
+                        key={pageNumber}
+                        onClick={() => handlePageClick(pageNumber)}
+                        className={`page-button ${currentPage === pageNumber ? 'active' : ''}`}
+                    >
+                        {pageNumber}
+                    </button>
+                    ))}
             </div>
             <Footer/>
         </div>

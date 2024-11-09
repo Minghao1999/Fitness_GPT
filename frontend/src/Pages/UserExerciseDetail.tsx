@@ -1,11 +1,13 @@
-import {Component, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {fetchExercises} from "../Services/exercises.tsx";
 import {useParams} from "react-router-dom";
+// @ts-ignore
 import "./Styles/UserExerciseDetail.css"
 import BoardNavbar from "../Components/common/BoardNavbar.tsx";
+// @ts-ignore
 import Footer from "../Components/common/Footer.tsx";
 
-const UserExerciseDetail: Component = () => {
+const UserExerciseDetail: () => (JSX.Element) = () => {
     const {id} = useParams()
     const [exercise, setExercise] = useState<any>(null)
 
