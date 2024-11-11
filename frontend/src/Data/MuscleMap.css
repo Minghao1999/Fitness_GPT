@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
+
+hr{
+    margin: 0% !important;
+}
+
+*{
+    font-family: 'Oswald', sans-serif ;
+
+}
+
+.container{
+    padding-top:2vw ;
+    padding-bottom: 2vw;
+    /* background-color: #f5f8fa; */
+}
+
+
+@media screen and (max-width: 600px) {
+    .icon{
+        width: 60%;
+        height: auto;
+        filter: invert(100%);
+
+
+    }
+}
+.body-map__muscle path:hover{
+    fill: crimson;
+}
+
+.heading ol{
+
+    list-style: none;
+    counter-reset: steps;
+}
+.muscle-map-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.muscle-map-container .col-sm-6 {
+    flex: 1;
+    margin: 10px;
+}
