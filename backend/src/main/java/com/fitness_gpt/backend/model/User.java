@@ -56,4 +56,8 @@ public class User {
     @Setter
     @Getter
     private String Age;
+
+    @Setter
+    @Getter
+    private String imageId;
 }

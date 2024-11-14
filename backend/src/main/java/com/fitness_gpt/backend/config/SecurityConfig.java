@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .authorizeRequests(auth -> auth //Configures access rules for different endpoints.
                         .requestMatchers("/auth/register", "/auth/login").permitAll()//Allows anyone to access these two endpoints
                         .requestMatchers("/auth/user-info").authenticated()//Requires authentication for accessing.
+                        .requestMatchers("/auth/download-image/**").permitAll()
                         .requestMatchers("/conversations/**").authenticated()//Requires authentication for any endpoint under /conversations/**
                         .anyRequest().authenticated()//Requires authentication for any other request not specifically mentioned.
                 )

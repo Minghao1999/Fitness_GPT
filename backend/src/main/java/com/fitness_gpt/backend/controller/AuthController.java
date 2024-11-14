@@ -3,15 +3,25 @@ package com.fitness_gpt.backend.controller;
 import com.fitness_gpt.backend.model.User;
 import com.fitness_gpt.backend.service.UserService;
 import com.fitness_gpt.backend.util.JwtUtil;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
+import com.mongodb.client.gridfs.GridFSDownloadStream;
 import jakarta.validation.Valid;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/auth")
@@ -21,6 +31,8 @@ public class AuthController {
     private UserService userService;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private MongoDatabase mongoDatabase;
 
     @CrossOrigin(origins = "http://localhost:5173")
 
@@ -71,5 +83,39 @@ public class AuthController {
         }catch (Exception e){
             throw new RuntimeException("Invalid token: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/upload-image")
+    public String uploadImage(@RequestHeader("Authorization") String token, @RequestParam("file") MultipartFile file) {
+        try{
+            String actualToken = token.replace("Bearer ", "");
+            String userId = jwtUtil.getUserIdFromToken(actualToken);
+
+            ObjectId imageId = userService.uploadUserImage(userId, file);
+
+            Optional<User> optionalUser = userService.getUserById(userId);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                user.setImageId(imageId.toHexString());
+                userService.updateUser(user);
+            }
+
+            return "Image uploaded successfully with ID: " + imageId.toHexString();
+        }catch (Exception e){
+            throw new RuntimeException("Image upload failed: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/download-image/{id}")
+    public ResponseEntity<byte[]> downloadImage(@PathVariable("id") String id) {
+        GridFSBucket gridFSBucket = GridFSBuckets.create(mongoDatabase, "userImages");
+
+        GridFSDownloadStream downloadStream = gridFSBucket.openDownloadStream(new ObjectId(id));
+        int fileLength = (int) downloadStream.getGridFSFile().getLength();
+        byte[] fileData = new byte[fileLength];
+        downloadStream.read(fileData);
+        downloadStream.close();
+
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(fileData);
     }
 }

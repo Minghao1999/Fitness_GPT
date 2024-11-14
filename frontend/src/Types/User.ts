@@ -6,4 +6,5 @@ export interface User {
     age?: string;
     height?: string;
     weight?: string;
+    imageId?: string;
 }

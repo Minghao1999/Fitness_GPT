@@ -59,14 +59,15 @@
     align-items: center;
     margin-bottom: 20px;
   }
-  
+
   .profile-picture img {
     width: 100px;
     height: 100px;
+    object-fit: cover;
     border-radius: 50%;
-    border: 2px solid #ff5349;
+    border: 3px solid #ff5349;
   }
-  
+
   .form-input[type="password"] {
     letter-spacing: 0.3em;
   }
@@ -86,4 +87,18 @@
   .form-button:hover {
     background-color: #e0453d;
   }
+
+
+
+.file-input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  opacity: 0;
+  cursor: pointer;
+}
+
   

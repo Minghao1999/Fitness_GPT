@@ -69,4 +69,25 @@ const updateUserInfo = async (updates: Partial<User>): Promise<User> => {
   }
 };
 
-export { registerUser, loginUser, getUserInfo, updateUserInfo };
+const uploadUserImage = async (file: File): Promise<string> => {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('No token found');
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try{
+    const response = await api.post('/upload-image', formData,{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      }
+    })
+    return response.data;
+    }catch (error){
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+}
+
+export { registerUser, loginUser, getUserInfo, updateUserInfo, uploadUserImage};

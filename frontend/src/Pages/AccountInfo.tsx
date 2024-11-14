@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import './Styles/AccountInfo.css';
-import {getUserInfo, updateUserInfo} from '../Services/authServices';
+import {getUserInfo, updateUserInfo, uploadUserImage} from '../Services/authServices';
 import {User} from '../Types/User';
 import BoardNavbar from "../Components/common/BoardNavbar.tsx";
 import Footer from "../Components/common/Footer.tsx";
@@ -9,6 +9,7 @@ const AccountInfo: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [profileImage, setProfileImage] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -16,6 +17,10 @@ const AccountInfo: React.FC = () => {
                 const userInfo = await getUserInfo();
                 setUser(userInfo);
                 setLoading(false);
+
+                if (userInfo.imageId){
+                    setProfileImage(`http://localhost:8080/auth/download-image/${userInfo.imageId}`)
+                }
             } catch (err) {
                 console.error('Error fetching user info:', err);
                 setError('Failed to load user information');
@@ -48,6 +53,20 @@ const AccountInfo: React.FC = () => {
         }
     };
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            try{
+                const imageId = await uploadUserImage(file)
+                setProfileImage(`http://localhost:8080/auth/download-image/${imageId}`)
+                alert('Image uploaded successfully');
+            }catch (error){
+                console.error('Error uploading image:', error);
+                setError('Failed to upload profile picture');
+            }
+        }
+    }
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -69,7 +88,13 @@ const AccountInfo: React.FC = () => {
                         <div className="form-group">
                             <label>PROFILE PICTURE</label>
                             <div className="profile-picture">
-                                <img src="/path/to/profile-pic.jpg" alt="Profile"/>
+                                <img src={profileImage || "/path/to/default-pic.jpg"} alt="Profile"/>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    className="file-input"
+                                />
                             </div>
                         </div>
                         <div className="form-group">
